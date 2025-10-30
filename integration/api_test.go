@@ -382,10 +382,6 @@ func TestAPIShowModel(t *testing.T) {
 	}
 }
 
-// Removed redundant basic embeddings API test; coverage exists in
-// integration/embed_test.go (vector equality and token counts) and
-// integration/model_arch_test.go (per-model expected vectors under models tag).
-
 func TestAPIToolCalling(t *testing.T) {
 	initialTimeout := 60 * time.Second
 	streamTimeout := 30 * time.Second
