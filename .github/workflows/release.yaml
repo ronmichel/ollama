@@ -367,7 +367,7 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     environment: release
-    needs: [darwin-build, windows-build, windows-depends, linux-build]
+    needs: [windows-build, windows-depends, linux-build]
     permissions:
       contents: write
     env:
