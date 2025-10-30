@@ -23,37 +23,6 @@ jobs:
         run: |
           echo GOFLAGS="'-ldflags=-w -s \"-X=github.com/ollama/ollama/version.Version=${GITHUB_REF_NAME#v}\" \"-X=github.com/ollama/ollama/server.mode=release\"'" >>$GITHUB_OUTPUT
 
-  darwin-build:
-    runs-on: macos-13-xlarge
-    environment: release
-    needs: setup-environment
-    strategy:
-      matrix:
-        os: [darwin]
-        arch: [amd64, arm64]
-    env:
-      GOFLAGS: ${{ needs.setup-environment.outputs.GOFLAGS }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-      - run: |
-          go build -o dist/ .
-        env:
-          GOOS: ${{ matrix.os }}
-          GOARCH: ${{ matrix.arch }}
-          CGO_ENABLED: 1
-          CGO_CPPFLAGS: '-mmacosx-version-min=11.3'
-      - if: matrix.arch == 'amd64'
-        run: |
-          cmake --preset CPU -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64
-          cmake --build --parallel --preset CPU
-          cmake --install build --component CPU --strip --parallel 8
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build-${{ matrix.os }}-${{ matrix.arch }}
-          path: dist/*
 
   windows-depends:
     strategy:
